@@ -1,4 +1,4 @@
--- // inc0mubomdia1 - script by inc0mu (NoClip + Fly + FPS Booster + Otimizado)
+-- // inc0mubomdia1 - script by inc0mu (NoClip + Fly + FPS Booster + Dinheiro Visual + Otimizado)
 -- // Coloque em StarterPlayer > StarterPlayerScripts como um LocalScript
 
 local Players = game:GetService("Players")
@@ -364,7 +364,6 @@ createToggleCard(visualPage, "Fullbright & Remove Fog", "Remove nevoeiros e ilum
 	end
 end)
 
--- FPS Booster (Remove sombras, texturas pesadas e partículas para máxima fluidez)
 createToggleCard(visualPage, "FPS Booster", "Remove sombras, efeitos e texturas pesadas do jogo.", function(state)
 	if state then
 		Lighting.GlobalShadows = false
@@ -379,7 +378,7 @@ createToggleCard(visualPage, "FPS Booster", "Remove sombras, efeitos e texturas 
 		for _, obj in pairs(Workspace:GetDescendants()) do
 			if obj:IsA("BasePart") then
 				obj.CastShadow = false
-			elseif obj:IsA("Decal" ) or obj:IsA("Texture") then
+			elseif obj:IsA("Decal") or obj:IsA("Texture") then
 				obj.Transparency = 1
 			elseif obj:IsA("ParticleEmitter") or obj:IsA("Fire") or obj:IsA("Smoke") or obj:IsA("Sparkles") then
 				obj.Enabled = false
@@ -408,7 +407,7 @@ createToggleCard(visualPage, "FPS Booster", "Remove sombras, efeitos e texturas 
 	end
 end)
 
--- 3. Movement (WalkSpeed customizável)
+-- 3. Movement (WalkSpeed customizável & NoClip/Fly)
 local speedCard = Instance.new("Frame")
 speedCard.Size = UDim2.new(1, 0, 0, 52)
 speedCard.BackgroundColor3 = Color3.fromRGB(24, 24, 28)
@@ -510,7 +509,6 @@ RunService.Heartbeat:Connect(function()
 	end
 end)
 
--- NoClip & Fly Combinados
 local noclipFlyActive = false
 createToggleCard(movementPage, "NoClip + Fly", "Atravessa paredes e permite voar livremente.", function(state)
 	noclipFlyActive = state
@@ -521,14 +519,12 @@ RunService.Stepped:Connect(function()
 	if not char then return end
 
 	if noclipFlyActive then
-		-- NoClip
 		for _, part in pairs(char:GetDescendants()) do
 			if part:IsA("BasePart") then
 				part.CanCollide = false
 			end
 		end
 
-		-- Fly
 		local rootPart = char:FindFirstChild("HumanoidRootPart")
 		if rootPart then
 			rootPart.Velocity = Vector3.new(0, 1, 0)
@@ -555,7 +551,7 @@ RunService.Stepped:Connect(function()
 	end
 end)
 
--- 4. Misc (Interação Instantânea)
+-- 4. Misc (Interação Instantânea & Dinheiro Infinito Visual)
 createToggleCard(miscPage, "Interação Instantânea", "Remove o tempo de espera de ProximityPrompts.", function(state)
 	if state then
 		local function setupPrompt(prompt)
@@ -571,6 +567,24 @@ createToggleCard(miscPage, "Interação Instantânea", "Remove o tempo de espera
 		
 		if not _G.PromptConnection then
 			_G.PromptConnection = Workspace.DescendantAdded:Connect(setupPrompt)
+		end
+	end
+end)
+
+createToggleCard(miscPage, "Dinheiro Infinito (Visual)", "Modifica o valor de dinheiro/cash localmente no player.", function(state)
+	local leaderstats = player:FindFirstChild("leaderstats")
+	if leaderstats then
+		for _, stat in pairs(leaderstats:GetChildren()) do
+			if stat:IsA("IntValue") or stat:IsA("NumberValue") then
+				local nameLower = stat.Name:lower()
+				if nameLower:find("money") or nameLower:find("cash") or nameLower:find("coin") or nameLower:find("gold") or nameLower:find("dinheiro") or nameLower:find("bux") then
+					if state then
+						stat.Value = 9999999999999
+					else
+						stat.Value = 0
+					end
+				end
+			end
 		end
 	end
 end)
